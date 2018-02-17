@@ -1,5 +1,6 @@
 import time
 from celery import shared_task,current_task
+
 from numpy import random
 from scipy.fftpack import fft
 
@@ -24,14 +25,17 @@ def add(x,y):
     return x+y
 
 @shared_task
-def taskState():
+def taskState(sleepTime):
+    print(sleepTime)
     current_task.update_state(state='starting')
     #for i in range(x):
-    time.sleep(2)
+    time.sleep(sleepTime)
+    current_task.update_state(state='processing')
+
+    time.sleep(sleepTime)
     current_task.update_state(state='running')
 
-    time.sleep(2)
-    current_task.update_state(state='failed')
-
-    time.sleep(2)
+    time.sleep(sleepTime)
     current_task.update_state(state='finished')
+
+

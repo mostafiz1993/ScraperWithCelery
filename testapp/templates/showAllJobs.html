@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>All jobs with status</h3>
+<a href="/index/addjob">Want to add more jobs??</a>
+<br>
+<br>
+{% for job in jobListJson %}
+    JobName: {{ job.jobName}}<br>
+    JobId: {{ job.jobId}}<br>
+    JobStatus: {{ job.status}}<br>
+    ----------------------------------------
+    <br>
+    <br>
+{% empty %}
+    Nothing found
+{% endfor %}
+
+</br></br>
+
+</body>
+</html>

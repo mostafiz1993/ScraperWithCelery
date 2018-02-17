@@ -1,4 +1,6 @@
 from django import forms
+
+from .models import JobInfo
 from .models import Calcu
 
 class UserForm(forms.ModelForm):
@@ -6,4 +8,12 @@ class UserForm(forms.ModelForm):
         model = Calcu
         fields = [
             "n",
+        ]
+
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = JobInfo
+        fields = [
+            "jobName"
         ]

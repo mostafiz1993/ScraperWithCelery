@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import loader
-from .forms import UserForm
+
+
+from testapp.models import JobInfo
+from .forms import UserForm, JobForm
 from .tasks import *
-from .testTask import add
 from celery.result import AsyncResult
 import json
 
@@ -50,13 +51,13 @@ def index(request):
         }
         return render(request,"post_form.html",context)
 
+
 def testTask(request):
-    print("test task")
     if 'job' in request.GET:
         job_id = request.GET['job']
         job = AsyncResult(job_id)
         data =  job.state
-        print(job.result)
+        print(job.state)
 
         context = {
             'data':data,
@@ -65,6 +66,47 @@ def testTask(request):
         return render(request,"test.html",context)
     elif 'a' in request.GET:
         a = request.GET['a']
-        job = taskState.delay()
+        #job = taskState.delay()
+        job = taskState.apply_async(args=[10],countdown=10)
         print(job.id)
         return HttpResponseRedirect('/index/' + '?job=' + job.id)
+
+def addJob(request):
+    if 'jobName' in request.GET:
+        jobName = request.GET['jobName']
+        job = taskState.apply_async(args=[10], countdown=3)
+        state = job.state
+        jobInfo = JobInfo.objects.create(jobName=jobName,jobId=job.id,status=state)
+        jobInfo.save()
+        return HttpResponseRedirect('/index/getalljobs')
+    else:
+        form = JobForm()
+        context = {
+            'form': form,
+        }
+        return render(request, "addJob.html", context)
+
+def getStateByJobId(jobId):
+    job = AsyncResult(jobId)
+    return job.state
+
+def revokeJobByJobId(jobId):
+    from celery import app
+    app.control.revoke(jobId)
+
+def getAllJobs(request):
+    jobList = JobInfo.objects.all()
+    results = []
+    for jobInfo in jobList:
+        jobInfoJson = {}
+        jobInfoJson['jobId'] = jobInfo.jobId
+        jobInfoJson['jobName'] = jobInfo.jobName
+        status = getStateByJobId(jobInfo.jobId)
+        if(status != jobInfo.status):
+            JobInfo.objects.filter(jobId=jobInfo.jobId).update(status=status)
+        jobInfoJson['status'] = status
+        results.append(jobInfoJson)
+
+    jobListJson = json.dumps(results)
+    print(jobListJson)
+    return render(request,"showAllJobs.html",{"jobListJson": json.loads(jobListJson)})
