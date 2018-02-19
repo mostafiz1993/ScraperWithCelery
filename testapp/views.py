@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-
-from testapp.models import JobInfo
+from testapp.models import JobInfo, TaskScheduler
 from .forms import UserForm, JobForm
 from .tasks import *
 from celery.result import AsyncResult
@@ -74,10 +73,16 @@ def testTask(request):
 def addJob(request):
     if 'jobName' in request.GET:
         jobName = request.GET['jobName']
-        job = taskState.apply_async(args=[10], countdown=3)
-        state = job.state
-        jobInfo = JobInfo.objects.create(jobName=jobName,jobId=job.id,status=state)
-        jobInfo.save()
+        #job = taskState.apply_async(args=[10], countdown=3)
+        #print(job.name)
+        #state = job.state
+        #jobInfo = JobInfo.objects.create(jobName=jobName,jobId=job.id,status=state)
+        #jobInfo.save()
+        name = taskState.__name__
+        print(name)
+        taskScheduler = TaskScheduler.schedule_every(name, 'seconds', 20, [3])
+        taskScheduler.start()
+
         return HttpResponseRedirect('/index/getalljobs')
     else:
         form = JobForm()
@@ -90,9 +95,17 @@ def getStateByJobId(jobId):
     job = AsyncResult(jobId)
     return job.state
 
+def getStateByJobName(jobName):
+    job = AsyncResult(jobName)
+    return job.state
+
 def revokeJobByJobId(jobId):
     from celery import app
     app.control.revoke(jobId)
+
+def startPeriodicTaskByJobId(jobId):
+    from celery import schedules
+
 
 def getAllJobs(request):
     jobList = JobInfo.objects.all()
