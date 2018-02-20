@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^$', views.testTask,name='testtask'),
     url(r'^poll_state$', views.poll_state,name='poll_state'),
     url(r'^getalljobs$', views.getAllJobs,name='getAllJobs'),
+    url(r'^killallrunningjobs$', views.killAllRunningJob,name='killAllRunningJobs'),
     url(r'^addjob$', views.addJob,name='addJob'),
 ]

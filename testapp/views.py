@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from testapp.models import JobInfo, TaskScheduler
+from testapp.models import JobInfo
 from .forms import UserForm, JobForm
 from .tasks import *
 from celery.result import AsyncResult
@@ -73,16 +73,10 @@ def testTask(request):
 def addJob(request):
     if 'jobName' in request.GET:
         jobName = request.GET['jobName']
-        #job = taskState.apply_async(args=[10], countdown=3)
-        #print(job.name)
-        #state = job.state
-        #jobInfo = JobInfo.objects.create(jobName=jobName,jobId=job.id,status=state)
-        #jobInfo.save()
-        name = taskState.__name__
-        print(name)
-        taskScheduler = TaskScheduler.schedule_every(name, 'seconds', 20, [3])
-        taskScheduler.start()
-
+        job = taskState.apply_async(args=[10], countdown=3)
+        state = job.state
+        jobInfo = JobInfo.objects.create(jobName=jobName,jobId=job.id,status=state)
+        jobInfo.save()
         return HttpResponseRedirect('/index/getalljobs')
     else:
         form = JobForm()
@@ -99,13 +93,18 @@ def getStateByJobName(jobName):
     job = AsyncResult(jobName)
     return job.state
 
+
 def revokeJobByJobId(jobId):
     from celery import app
     app.control.revoke(jobId)
 
-def startPeriodicTaskByJobId(jobId):
-    from celery import schedules
-
+def killJobByJobId(jobId):
+    try:
+        job = AsyncResult(jobId)
+        job.revoke(terminate=True)
+        return True
+    except:
+        return False
 
 def getAllJobs(request):
     jobList = JobInfo.objects.all()
@@ -123,3 +122,20 @@ def getAllJobs(request):
     jobListJson = json.dumps(results)
     print(jobListJson)
     return render(request,"showAllJobs.html",{"jobListJson": json.loads(jobListJson)})
+
+def killAllRunningJob(request):
+    jobList = JobInfo.objects.all()
+    results = []
+    for jobInfo in jobList:
+        jobInfoJson = {}
+        jobInfoJson['jobId'] = jobInfo.jobId
+        jobInfoJson['jobName'] = jobInfo.jobName
+        status = getStateByJobId(jobInfo.jobId)
+        if (status != 'SUCCESS' or status != 'REVOKED'):
+            killJobByJobId(jobInfo.jobId)
+        jobInfoJson['status'] = status
+        results.append(jobInfoJson)
+
+    jobListJson = json.dumps(results)
+    print(jobListJson)
+    return render(request, "showAllJobs.html", {"jobListJson": json.loads(jobListJson)})
