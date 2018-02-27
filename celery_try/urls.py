@@ -8,4 +8,5 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/', include('testapp.urls')),
+    url(r'^home/', include('schedulerui.urls')),
 ]
