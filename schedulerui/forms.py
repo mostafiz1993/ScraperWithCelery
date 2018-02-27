@@ -11,10 +11,10 @@ RECURRENCE_LIST = (
 )
 
 class SiteForm(forms.Form):
-    name    = forms.CharField(max_length=50, widget=forms.Select(choices=SITE_NAME))
+    name = forms.CharField(max_length=50, widget=forms.Select(choices=SITE_NAME))
     job_title = forms.CharField(max_length=50)
     location = forms.CharField(max_length=30)
     company_name = forms.CharField(max_length=50)
     recurrence = forms.CharField(max_length=5,widget=forms.Select(choices=RECURRENCE_LIST))
-    seach_start_time  = forms.TimeField()
+    search_start_time  = forms.TimeField()
     until_stop = forms.BooleanField()
