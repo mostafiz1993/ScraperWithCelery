@@ -1,38 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-    <form method="post" novalidate>
-        {% csrf_token %}
-
-        {{ form.non_field_errors }}
-
-        {% for hidden_field in form.hidden_fields %}
-        {{ hidden_field.errors }}
-        {{ hidden_field }}
-        {% endfor %}
-
-        <table >
-        {% for field in form.visible_fields %}
-          <tr>
-            <th>{{ field.label_tag }}</th>
-            <td>
-              {{ field.errors }}
-              {{ field }}
-              {{ field.help_text }}
-            </td>
-
-          </tr>
-            <br>
-        {% endfor %}
-        </table>
-
-        <button type="submit">Submit</button>
-    </form>
-
-</body>
+<html>
+    <head>
+        <title></title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <h1>ADD new Task</h1>
+            <div style="width:30%">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for error in form.non_field_errors %}
+                    <div class="form-group has-errors text-danger small">
+                        {{error}}
+                    </div>
+                    {% endfor %}
+                    {% for field in form %}
+                    <div class="form-group has-errors text-danger small">
+                        {{field.errors}}
+                    </div>
+                    <div class="form-group has-errors text-danger small">
+                    </div>
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field.errors }}
+                        {{ field }}
+                        {{ field.help_text }}
+                    </div>
+                    {% endfor %}
+                    <button class="btn btn-primary" style="width:100%" type="submit">Add</button>
+            </div>
+            </form>
+        </div>
+    </body>
 </html>
