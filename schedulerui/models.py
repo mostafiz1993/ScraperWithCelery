@@ -10,6 +10,6 @@ class SITE(models.Model):
     location = models.CharField(max_length=30)
     company_name = models.CharField(max_length=50)
     recurrence = models.CharField(max_length=5)
-    seach_start_time  = models.DateTimeField()
-    until_stop = models.IntegerField()
+    search_start_time  = models.DateTimeField()
+    #until_stop = models.IntegerField()
 # Create your models here.

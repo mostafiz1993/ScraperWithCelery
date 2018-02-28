@@ -42,7 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'testapp',
-    'djcelery'
+    'djcelery',
+    'schedulerui'
 )
 
 MIDDLEWARE_CLASSES = (

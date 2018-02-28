@@ -7,6 +7,7 @@ import urllib
 from bs4 import BeautifulSoup
 
 from .forms import SiteForm
+from .models import *
 
 
 # Create your views here.
@@ -17,10 +18,14 @@ def home (request):
             site_name = form.cleaned_data['name']
             job_title = form.cleaned_data['job_title']
             location = form.cleaned_data['location']
+            company_name = form.cleaned_data['company_name']
+            recurrence = form.cleaned_data['recurrence']
+            search_start_time = form.cleaned_data['search_start_time']
+            #create_site_object(site_name,job_title,location,company_name,recurrence,search_start_time)
             f = {'q': job_title, 'I': location}
             print urllib.urlencode(f)
             url_to_parse =  site_name + urllib.urlencode(f)
-            parser(url_to_parse)
+            #parser(url_to_parse)
             form = SiteForm()
             return render(request, 'scheduler.html', {'form': form})
             #pass  # does nothing, just trigger the validation
@@ -29,6 +34,12 @@ def home (request):
     return render(request, 'scheduler.html', {'form': form})
 
 # Create your views here.
+
+
+def create_site_object(site_name,job_title,location,company_name,recurrence,search_start_time):
+    site_data = SITE(name = site_name,job_title = job_title,location = location, company_name = company_name,recurrence = recurrence, search_start_time = search_start_time)
+    site_data.save()
+
 
 
 def parser(url):
