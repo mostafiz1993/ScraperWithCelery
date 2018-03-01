@@ -8,8 +8,8 @@
         <div class="container">
             <h1>ADD new Task</h1>
             <div style="width:30%">
-                <form action="">
-                    {%csrf_token%}
+                <form method="post" novalidate>
+                    {% csrf_token %}
                     {% for error in form.non_field_errors %}
                     <div class="form-group has-errors text-danger small">
                         {{error}}
@@ -28,7 +28,7 @@
                         {{ field.help_text }}
                     </div>
                     {% endfor %}
-                    <button class="btn btn-primary" style="width:100%">Add</button>
+                    <button class="btn btn-primary" style="width:100%" type="submit">Add</button>
             </div>
             </form>
         </div>

@@ -5,9 +5,13 @@ from django.shortcuts import render_to_response,render
 import datetime
 import urllib
 from bs4 import BeautifulSoup
+import csv
 
 from .forms import SiteForm
 from .models import *
+
+
+
 
 
 # Create your views here.
@@ -46,20 +50,31 @@ def parser(url):
     prefix = 'https://www.indeed.com'
     first_page = urllib.urlopen(url).read()
     soup = BeautifulSoup(first_page, "html.parser")
+    outputFile = open('example2.csv', 'w')
 
     def parse_each_page(soup):
         job = soup.find_all("div", class_="row")
+
         for eachJob in job:
             eachJobUrl = eachJob.find_all('a', class_='turnstileLink')
             eachJobUrl = urllib.urlopen(prefix + eachJobUrl[0]["href"])
             eachJobPage = BeautifulSoup(eachJobUrl, "html.parser")
             company = eachJobPage.find_all("div", class_="cmp_title")
             jobTitle = eachJobPage.find_all("b", class_="jobtitle")
+
+            row = []
             try:
                 companyName = company[0].a.text
                 job = jobTitle[0].font.text
+                row.append(companyName)
+                row.append(job)
+                #with outputFile:
+                writer = csv.writer(outputFile)
+                print row
+                writer.writerow(row)
                 print job
                 print companyName
+                break
             except IndexError:
                 pass
 
