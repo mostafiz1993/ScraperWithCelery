@@ -25,13 +25,13 @@ def home (request):
             company_name = form.cleaned_data['company_name']
             recurrence = form.cleaned_data['recurrence']
             search_start_time = form.cleaned_data['search_start_time']
-            #create_site_object(site_name,job_title,location,company_name,recurrence,search_start_time)
+            create_site_object(site_name,job_title,location,company_name,recurrence,search_start_time)
             f = {'q': job_title, 'I': location}
             print urllib.urlencode(f)
             url_to_parse =  site_name + urllib.urlencode(f)
             #parser(url_to_parse)
             form = SiteForm()
-            return render(request, 'scheduler.html', {'form': form})
+            return render(request, 'scheduler.html', {'jobs' : SITE.objects.all(),'form': form})
             #pass  # does nothing, just trigger the validation
     else:
         form = SiteForm()

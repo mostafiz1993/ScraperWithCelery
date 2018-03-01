@@ -29,8 +29,33 @@
                     </div>
                     {% endfor %}
                     <button class="btn btn-primary" style="width:100%" type="submit">Add</button>
+                </form>
             </div>
-            </form>
+            <br>
+            <br>
+            <br>
+            <h2>Running Tasks</h2>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.name }}</td>
+                        <td>{{ job.name }}</td>
+                        <td>{{ job.name }}</td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+             </table>
+
         </div>
     </body>
 </html>
