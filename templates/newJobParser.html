@@ -1,0 +1,226 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Customize Template For Job Data Aggregation</title>
+        <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
+        <link href='{% static "css/nice-select.css" %}' rel="stylesheet">
+        <link href='{% static "css/style.css" %}' rel="stylesheet">
+        <link href='{% static "css/responsive.css" %}' rel="stylesheet">
+        <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+      <div class="page-header">
+        <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title">
+                <h3>New Job Aggregator Template</h3>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <!--Page Header End-->
+      <div class="form-area">
+        <div class="container">
+          <row>
+            <div class="col-md-9">
+              <form action="#" method="get">
+                <div class="form-group">
+                  <label>SiteName</label>
+                  <input type="text" class="form-control" placeholder="Indeed India">
+                </div>
+                <div class="form-group">
+                  <label>Site URL</label>
+                  <input type="text" class="form-control" placeholder="www.indeed.co.in">
+                </div>
+                <div class="form-group">
+                  <label>Search Syntex</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Job Title</label>
+                  <input type="text" class="form-control" placeholder="Job Title Syntex or Class Annotation">
+                </div>
+                <div class="form-group">
+                  <label>Job Category</label>
+                  <input type="text" class="form-control" placeholder="Job Category Syntex or Class Annotation">
+                </div>
+                <div class="form-group">
+                  <label>Location - City, State and Country</label>
+                  <input type="text" class="form-control" placeholder="Location - City, State and Country Syntex">
+                </div>
+                <div class="form-group">
+                  <label>City - San Francisco</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>State - California</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Country  - USA</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Zipcode</label>
+                  <input type="text" class="form-control" placeholder="Zipcode">
+                </div>
+                <div class="form-group">
+                  <label>Salary Information</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Years of Experieence</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Job Posted Date</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Company Name</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Company Domain Address And Website</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Job URL</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Job Description</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>About the Company</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Number Of Job</label>
+                  <input type="text" class="form-control">
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <div class="input-group-btn">
+                        <button type="button" class="btn btn-primary" name="button">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="data-control">
+                      <a href="#">Cancel</a>
+                      <a href="#">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </row>
+        </div>
+      </div>
+
+
+
+      <div class="page-header">
+        <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title">
+                <h3>List of Job Aggregator Template</h3>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="data-table">
+                  <div class="row">
+                    <div class="col-sm-4">
+                     <div class="data-visible">
+                          <select>
+                            <option value="1">Display 20</option>
+                            <option value="2">Display 30</option>
+                            <option value="3">Display 40</option>
+                            <option value="4">Display 50</option>
+                          </select>
+                     </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="table-responsive text-center table-color">
+                                <table class="table table-bordered">
+                                  <thead class="text-center">
+                                    <tr>
+                                      <th>No</th>
+                                      <th>Site Name</th>
+                                      <th>Title</th>
+                                      <th>Update Date</th>
+                                      <th>Job Type</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>Business Analyst</td>
+                                      <td>Indeed.com</td>
+                                      <td>Indeed India</td>
+                                      <td>June 12, 2017</td>
+                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
+                                    </tr>
+                                   <tr>
+                                      <td>2</td>
+                                      <td>Business Analyst</td>
+                                      <td>Indeed.com</td>
+                                      <td>Indeed India</td>
+                                      <td>June 12, 2017</td>
+                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
+                                    </tr>
+                                    <tr>
+                                      <td>3</td>
+                                      <td>Business Analyst</td>
+                                      <td>Indeed.com</td>
+                                      <td>Indeed India</td>
+                                      <td>June 12, 2017</td>
+                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
+                                    </tr>
+                                    <tr>
+                                      <td>4</td>
+                                      <td>Business Analyst</td>
+                                      <td>Indeed.com</td>
+                                      <td>Indeed India</td>
+                                      <td>June 12, 2017</td>
+                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src='{% static "js/jquery.nice-select.min.js" %}'></script>
+        <script src='{% static "js/main.js" %}'></script>
+    </body>
+</html>

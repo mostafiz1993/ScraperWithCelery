@@ -11,11 +11,18 @@ from .forms import SiteForm
 from .models import *
 
 
+def index(request):
+    return render(request,'index.html')
 
+def addJob(request):
+    return render(request,'newJobParser.html')
+
+def addJobInScheduler(request):
+    return render(request,'jobScheduler.html')
 
 
 # Create your views here.
-def home (request):
+def home(request):
     if request.method == 'POST':
         form = SiteForm(request.POST)
         if form.is_valid():
@@ -27,7 +34,7 @@ def home (request):
             search_start_time = form.cleaned_data['search_start_time']
             create_site_object(site_name,job_title,location,company_name,recurrence,search_start_time)
             f = {'q': job_title, 'I': location}
-            print urllib.urlencode(f)
+            print(urllib.urlencode(f))
             url_to_parse =  site_name + urllib.urlencode(f)
             #parser(url_to_parse)
             form = SiteForm()
@@ -70,17 +77,17 @@ def parser(url):
                 row.append(job)
                 #with outputFile:
                 writer = csv.writer(outputFile)
-                print row
+                print(row)
                 writer.writerow(row)
-                print job
-                print companyName
+                print(job)
+                print(companyName)
                 break
             except IndexError:
                 pass
 
     def go_to_next_page(url):
         urlopen = urllib.urlopen(prefix + url)
-        print prefix + url
+        print(prefix + url)
         soup = BeautifulSoup(urlopen, "html.parser")
         parse_each_page(soup)
         pagination = soup.find_all("div", class_="pagination")

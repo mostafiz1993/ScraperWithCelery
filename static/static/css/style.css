@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700');
+/* Base CSS */
+.alignleft {
+    float: left;
+    margin-right: 15px;
+}
+.alignright {
+    float: right;
+    margin-left: 15px;
+}
+.aligncenter {
+    display: block;
+    margin: 0 auto 15px;
+}
+a:focus { outline: 0 solid }
+img {
+    max-width: 100%;
+    height: auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 15px;
+    font-weight: 600;
+}
+html,
+body { height: 100% }
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 15px;
+  color: #4A4A4A;
+}
+a:hover { text-decoration: none }
+
+/* Remove Chrome Input Field's Unwanted Yellow Background Color */
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+
+body.sign-in {
+    padding: 85px;
+}
+
+.sign-logo.text-center {
+    padding: 40px 0;
+}
+body.sign-in .form-area form {
+  padding: 25px 35px 35px;
+}
+.page-header .page-title h3 {
+  margin-bottom: -10px;
+  padding: 15px;
+}
+.page-header {
+    background-color: #169bd5;
+    color: #fff;
+    margin: 0;
+}
+.form-area form {
+  border: 1px solid #ccc;
+  margin-top: -1px;
+  padding: 0 35px 35px;
+  margin-bottom: 50px;
+}
+.form-area label {
+    color: #000;
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    margin: 6px 0;
+}
+.form-area input.form-control {
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 300;
+  height: 40px;
+  line-height: 42px;
+}
+.form-area .input-group-btn .btn-primary {
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding: 14px 50px;
+    background-color: #169BD5;
+    display: inline-block;
+    border: 1px solid transprant;
+}
+.form-area button.btn-default {
+  display: block;
+  height: 40px;
+  line-height: 25px;
+  width: 80%;
+}
+.form-area .data-control a {
+  font-weight: 700;
+  line-height: 80px;
+  margin: 3px 25px;
+  padding: 10px 0;
+}
+
+.form-area .checkbox label {
+  font-weight: 400;
+}
+
+.data-table {
+  background-color: #e8e8e8;
+}
+.form-area form .nice-select {
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    margin-top: 3px;
+    padding: 0 10px;
+}
+.data-visible .nice-select {
+    margin: 15px 0;
+}
+.data-table table thead th {
+    background-color: #c9c9c9;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 0;
+    text-align: center;
+}
+.data-table table tbody tr td {
+    font-size: 15px;
+    padding: 10px;
+    font-weight: 400;
+    background-color: #fff;
+}
+.data-table table tbody tr td a{
+  padding: 0 5px;
+}
+.data-table input.form-control {
+  border: 1px solid transparent;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 300;
+  height: 42px;
+  margin: 14px;
+}
+.data-table button.btn-default {
+  font-weight: 600;
+  margin: 15px;
+  padding: 10px;
+  width: 80%;
+}
