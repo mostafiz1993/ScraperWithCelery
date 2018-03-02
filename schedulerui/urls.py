@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home, name = 'home'),
     url(r'index/',views.index, name = 'index'),
-    url(r'addjob/',views.addJob, name = 'addjob'),
+    url(r'addparserjob/',views.addParserJob, name = 'addparserjob'),
     url(r'addjobinscheduler',views.addJobInScheduler, name = 'addjobinscheduler'),
+    url(r'deletejobparser/(?P<jobparserid>(\d+))', views.deleteJobParser, name='deletejobparser')
 ]

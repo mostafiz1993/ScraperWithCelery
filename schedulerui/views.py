@@ -1,24 +1,69 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render_to_response,render
-import datetime
+from django.shortcuts import render_to_response, render, redirect
 import urllib
 from bs4 import BeautifulSoup
 import csv
-
-from .forms import SiteForm
+import json
+from .forms import *
 from .models import *
 
 
 def index(request):
     return render(request,'index.html')
 
-def addJob(request):
-    return render(request,'newJobParser.html')
+def addParserJob(request):
+    if request.method == "POST":
+        form = JobParserFrom(request.POST)
+        if form.is_valid():
+            siteName = form.cleaned_data['siteName']
+            siteURL = form.cleaned_data['siteURL']
+            searchSyntax = form.cleaned_data['searchSyntax']
+            jobTitle = form.cleaned_data['jobTitle']
+            jobCategory= form.cleaned_data['jobCategory']
+            location = form.cleaned_data['location']
+            jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax,
+                                                 jobTitle=jobTitle,jobCategory=jobCategory,location=location)
+            jobParser.save()
+            # print(siteName)
+            # print(siteURL)
+            # print(searchSyntax)
+            form = JobParserFrom()
+            jobParserListJson = getAllJobParser()
+            return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+
+    else:
+        form = JobParserFrom()
+
+    jobParserListJson = getAllJobParser()
+    return render(request, 'newJobParser.html', {"form":form, "jobParserListJson": json.loads(jobParserListJson)})
+
+def getAllJobParser():
+    jobParserList = JobParser.objects.all()
+    results = []
+    for jobParser in jobParserList:
+        jobParserJson = {}
+        jobParserJson['siteName'] = jobParser.siteName
+        jobParserJson['siteURL'] = jobParser.siteURL
+        jobParserJson['jobTitle'] = jobParser.jobTitle
+        jobParserJson['jobId'] = jobParser.id
+        jobParserJson['updated'] = jobParser.updated.strftime("%d-%m-%Y")
+        results.append(jobParserJson)
+    jobParserListJson = json.dumps(results)
+    return jobParserListJson
 
 def addJobInScheduler(request):
     return render(request,'jobScheduler.html')
+
+def deleteJobParser(request,jobparserid):
+    print(jobparserid)
+    jobParser = JobParser.objects.get(pk=jobparserid)
+    jobParser.delete()
+    return redirect("/home/addparserjob")
+    # form = JobParserFrom()
+    # jobParserListJson = getAllJobParser()
+    # return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
 
 
 # Create your views here.
@@ -67,6 +112,7 @@ def parser(url):
             eachJobUrl = urllib.urlopen(prefix + eachJobUrl[0]["href"])
             eachJobPage = BeautifulSoup(eachJobUrl, "html.parser")
             company = eachJobPage.find_all("div", class_="cmp_title")
+
             jobTitle = eachJobPage.find_all("b", class_="jobtitle")
 
             row = []

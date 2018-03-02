@@ -9,8 +9,9 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^index/', include('testapp.urls')),
     url(r'^home/', include('schedulerui.urls')),
+    url(r'^index/', include('testapp.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,document_root = settings.STATIC_ROOT)
