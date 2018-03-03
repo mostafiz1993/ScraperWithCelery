@@ -8,9 +8,27 @@ import csv
 import json
 from .forms import *
 from .models import *
-
+import requests
 
 def index(request):
+    auth = requests.post("http://api.raasforce.com/Token","grant_type=password&username=azim.raasforce@gmail.com&password=123456")
+    content = auth.json()
+    accessToken = ""
+    for k,v in content.items():
+        if(k == "access_token"):
+            accessToken = v
+
+    if accessToken != "":
+        print("login success")
+    else:
+        print("login fail")
+    #print(content)
+
+    #print(content['results'])
+    # if content['access_token']:
+    #     print(content['expires'])
+    # else:
+    #     print("hi")
     return render(request,'index.html')
 
 def addParserJob(request):
