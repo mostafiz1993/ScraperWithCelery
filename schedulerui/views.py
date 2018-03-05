@@ -143,7 +143,9 @@ def addJobInScheduler(request):
 
     else:
         form = JobSchedulerForm()
-        #form = JobSchedulerForm(initial={'jobTitle': "hello"})
+        scheduledJobListJson = getAllScheduledJob()
+        return render(request, 'jobScheduler.html',
+                      {"form": form, "scheduledJobListJson": json.loads(scheduledJobListJson)})
 
     return render(request, 'jobScheduler.html', {"form": form})
 
@@ -171,6 +173,12 @@ def deleteJobParser(request,jobparserid):
     # form = JobParserFrom()
     # jobParserListJson = getAllJobParser()
     # return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+
+def deleteJobScheduler(request,jobschedulerid):
+    print(jobschedulerid)
+    jobScheduler = JobScheduler.objects.get(pk=jobschedulerid)
+    jobScheduler.delete()
+    return redirect("/home/addjobinscheduler")
 
 
 # Create your views here.

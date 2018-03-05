@@ -58,7 +58,7 @@ class LoginForm(forms.Form):
     ))
 
 def getJobParserURL():
-    parserURLList = ((1,'hello'),(2,'hi'),(3,'ami'))
+    parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
     return parserURLList
 
 class JobSchedulerForm(forms.Form):

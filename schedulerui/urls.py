@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'addparserjob/',views.addParserJob, name = 'addparserjob'),
     url(r'addjobinscheduler',views.addJobInScheduler, name = 'addjobinscheduler'),
     url(r'deletejobparser/(?P<jobparserid>(\d+))', views.deleteJobParser, name='deletejobparser'),
+    url(r'deletejobscheduler/(?P<jobschedulerid>(\d+))', views.deleteJobScheduler, name='deletejobscheduler'),
     #url(r'logout/', views.logout_view, name='logout'),
 ]
