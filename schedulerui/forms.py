@@ -6,8 +6,10 @@ SITE_NAME = (
 
 )
 RECURRENCE_LIST = (
-    ( '1' , 'DAILY'),
-    ( '1', 'WEEKLY'),
+    ( '1', 'Daily'),
+    ( '2', 'Every Two Day'),
+    ( '3', 'Weekly'),
+    ( '4', 'Monthly'),
 )
 
 class SiteForm(forms.Form):
@@ -25,7 +27,7 @@ class JobParserFrom(forms.Form):
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     searchSyntax = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    #jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     # city = forms.CharField(max_length=200)
     # state = forms.CharField(max_length=200)
@@ -40,6 +42,7 @@ class JobParserFrom(forms.Form):
     # jobDesc = forms.CharField(max_length=200)
     # aboutCompany = forms.CharField(max_length=200)
     # numOfJob = forms.CharField(max_length=200)
+
 class LoginForm(forms.Form):
     userName = forms.EmailField(widget=forms.TextInput(
         attrs={
@@ -53,3 +56,15 @@ class LoginForm(forms.Form):
         'placeholder':'Password'
         }
     ))
+
+def getJobParserURL():
+    parserURLList = ((1,'hello'),(2,'hi'),(3,'ami'))
+    return parserURLList
+
+class JobSchedulerForm(forms.Form):
+    siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(choices=getJobParserURL(),attrs={'class': 'form-control'}))
+    jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    dailyStartTime = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    recurrence = forms.CharField(max_length=5, required=True,widget=forms.Select(choices=RECURRENCE_LIST,attrs={'class':'form-control'}))
+    oneTimeProcess = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'checkbox'}))

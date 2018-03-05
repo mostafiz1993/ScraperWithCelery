@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^home/', include('schedulerui.urls')),
     url(r'^index/', include('testapp.urls')),
-
+    url(r'^logout/',views.logout_view, name = 'logout'),
 
 ]
 if settings.DEBUG:

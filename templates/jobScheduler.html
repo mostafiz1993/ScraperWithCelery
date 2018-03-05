@@ -1,208 +1,230 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Job Data Aggregation</title>
-        <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
-        <link href='{% static "css/nice-select.css" %}' rel="stylesheet">
-        <link href='{% static "css/style.css" %}' rel="stylesheet">
-        <link href='{% static "css/responsive.css" %}' rel="stylesheet">
-        <!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Job Data Aggregation</title>
+    <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
+    <link href='{% static "css/nice-select.css" %}' rel="stylesheet">
+    <link href='{% static "css/style.css" %}' rel="stylesheet">
+    <link href='{% static "css/responsive.css" %}' rel="stylesheet">
+    <!--[if lt IE 9]>
         <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-    </head>
-    <body>
-      <div class="page-header">
-        <div class="container">
+</head>
+<body>
+<div class="page-header">
+    <div class="container">
         <div class="row">
-          <div class="col-sm-12">
-            <div class="page-title">
-                <h3>New Job Aggregator Process</h3>
+            <div class="col-sm-12">
+                <div class="page-title">
+                    <h3>New Job Aggregator Process</h3>
+                </div>
             </div>
-          </div>
         </div>
-        </div>
-      </div>
-      <!--Page Header End-->
-      <div class="form-area">
-        <div class="container">
-          <row>
+    </div>
+</div>
+<!--Page Header End-->
+<div class="form-area">
+    <div class="container">
+        <row>
             <div class="col-md-6">
-              <form action="#" method="get">
-                <div class="form-group">
-                  <select>
-                        <option value="1">indend.com</option>
-                        <option value="2">dice.com</option>
-                        <option value="3">linkdin.com</option>
-                        <option value="4">monstar.com</option>
-                    </select>
+                <form  method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.help_text }}
+                        </div>
+
+                        <div class="form-group has-errors text-danger small">
+                            {{field.errors}}
+                        </div>
+                    {% endfor %}
+                    {#                <div class="form-group">#}
+                    {#                  <select>#}
+                    {#                        <option value="1">indend.com</option>#}
+                    {#                        <option value="2">dice.com</option>#}
+                    {#                        <option value="3">linkdin.com</option>#}
+                    {#                        <option value="4">monstar.com</option>#}
+                    {#                    </select>#}
+                    {#                </div>#}
+                    {#                <div class="form-group">#}
+                    {#                  <label>Job Title</label>#}
+                    {#                  <input type="text" class="form-control" placeholder="Job Title Syntex or Class Annotation">#}
+                    {#                </div>#}
+                    {#                <div class="form-group">#}
+                    {#                  <label>Location</label>#}
+                    {#                  <input type="text" class="form-control" placeholder="New York, United States">#}
+                    {#                </div>#}
+                    {#                <div class="form-group">#}
+                    {#                  <label>Company Name</label>#}
+                    {#                  <input type="text" class="form-control">#}
+                    {#                </div>#}
+                    {#                <div class="form-group">#}
+                    {#                 <label>Recurrence</label>#}
+                    {#                  <select>#}
+                    {#                        <option value="1">Daily</option>#}
+                    {#                        <option value="2">Every Two Day</option>#}
+                    {#                        <option value="3">Weekly</option>#}
+                    {#                        <option value="4">Monthly</option>#}
+                    {#                    </select>#}
+                    {#                 </div>#}
+                    {#                <div class="form-group">#}
+                    {#                  <label>Daily Search Start Time</label>#}
+                    {#                  <input type="text" class="form-control" placeholder="Time">#}
+                    {#                </div>#}
+                    {#                <div class="checkbox">#}
+                    {#                    <label><input type="checkbox" value="">until stop</label>#}
+                    {#                 </div>#}
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary" name="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="data-control">
+                                <a href="{% url 'addjobinscheduler' %}">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </row>
+    </div>
+</div>
+
+
+
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title">
+                    <h3>List of Job Aggregator Template</h3>
                 </div>
-                <div class="form-group">
-                  <label>Job Title</label>
-                  <input type="text" class="form-control" placeholder="Job Title Syntex or Class Annotation">
-                </div>
-                <div class="form-group">
-                  <label>Location</label>
-                  <input type="text" class="form-control" placeholder="New York, United States">
-                </div>
-                <div class="form-group">
-                  <label>Company Name</label>
-                  <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                 <label>Recurrence</label>
-                  <select>
-                        <option value="1">Daily</option>
-                        <option value="2">Every Two Day</option>
-                        <option value="3">Weekly</option>
-                        <option value="4">Monthly</option>
-                    </select>
-                 </div>
-                <div class="form-group">
-                  <label>Daily Search Start Time</label>
-                  <input type="text" class="form-control" placeholder="Time">
-                </div>
-                <div class="checkbox">
-                    <label><input type="checkbox" value="">until stop</label>
-                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="data-table">
+                {#                <div class="row">#}
+                {#                    <div class="col-md-3">#}
+                {#                        <div class="form-group">#}
+                {#                            <input type="text" class="form-control" placeholder="Job title, keyword">#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                    <div class="col-sm-3">#}
+                {#                        <div class="data-visible">#}
+                {#                            <select>#}
+                {#                                <option value="1">Location Ctiy</option>#}
+                {#                                <option value="2">New Work, USA (888)</option>#}
+                {#                                <option value="3">Dalas TAX</option>#}
+                {#                            </select>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                    <div class="col-sm-3">#}
+                {#                        <div class="data-visible">#}
+                {#                            <select>#}
+                {#                                <option value="1">Job Site</option>#}
+                {#                                <option value="2">Monstar India</option>#}
+                {#                                <option value="3">Dice</option>#}
+                {#                                <option value="4">Indeed</option>#}
+                {#                            </select>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                    <div class="col-sm-3">#}
+                {#                        <div class="input-group">#}
+                {#                            <div class="input-group-btn">#}
+                {#                                <button type="button" class="btn btn-default btn-md" name="button">Search</button>#}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
                 <div class="row">
-                  <div class="col-sm-6">
-                    <div class="input-group">
-                      <div class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-md" name="button">One Time Search</button>
-                      </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive text-center table-color">
+                            <table class="table table-bordered">
+                                <thead class="text-center">
+                                <tr>
+                                    <th>Site URL</th>
+                                    <th>Job Title</th>
+                                    <th>Created Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+{#                                <tr>#}
+{#                                    <td>1</td>#}
+{#                                    <td>Business Analyst</td>#}
+{#                                    <td>Indeed.com</td>#}
+{#                                    <td>Indeed India</td>#}
+{#                                    <td>June 12, 2017</td>#}
+{#                                    <td><a href="#">Edit</a> <a href="">Delete</a></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>2</td>#}
+{#                                    <td>Business Analyst</td>#}
+{#                                    <td>Indeed.com</td>#}
+{#                                    <td>Indeed India</td>#}
+{#                                    <td>June 12, 2017</td>#}
+{#                                    <td><a href="#">Edit</a> <a href="">Delete</a></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>3</td>#}
+{#                                    <td>Business Analyst</td>#}
+{#                                    <td>Indeed.com</td>#}
+{#                                    <td>Indeed India</td>#}
+{#                                    <td>June 12, 2017</td>#}
+{#                                    <td><a href="#">Edit</a> <a href="">Delete</a></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>4</td>#}
+{#                                    <td>Business Analyst</td>#}
+{#                                    <td>Indeed.com</td>#}
+{#                                    <td>Indeed India</td>#}
+{#                                    <td>June 12, 2017</td>#}
+{#                                    <td><a href="#">Edit</a> <a href="">Delete</a></td>#}
+{#                                </tr>#}
+                                {% for jobScheduler in scheduledJobListJson %}
+                                    <tr>
+                                        <td>{{ jobScheduler.siteURL}}</td>
+                                        <td>{{ jobScheduler.jobTitle }}</td>
+                                        <td>{{ jobScheduler.created }}</td>
+                                        <td>{{ jobScheduler.status }}</td>
+                                        <td><a href="/home/deletejobscheduler/{{ jobScheduler.jobId }}" >Delete</a>
+                                    </tr>
+
+                                {% empty %}
+                                    Nothing found
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="input-group">
-                      <div class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-md" name="button">Add To Batch Process</button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </form>
-            </div>
-          </row>
-        </div>
-      </div>
-
-
-
-      <div class="page-header">
-        <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="page-title">
-                <h3>List of Job Aggregator Template</h3>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-              <div class="data-table">
-                  <div class="row">
-                   <div class="col-md-3">
-                       <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Job title, keyword">
-                        </div>
-                   </div>
-                    <div class="col-sm-3">
-                     <div class="data-visible">
-                          <select>
-                            <option value="1">Location Ctiy</option>
-                            <option value="2">New Work, USA (888)</option>
-                            <option value="3">Dalas TAX</option>
-                          </select>
-                     </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="data-visible">
-                          <select>
-                            <option value="1">Job Site</option>
-                            <option value="2">Monstar India</option>
-                            <option value="3">Dice</option>
-                            <option value="4">Indeed</option>
-                          </select>
-                        </div>
-                    </div>
-                     <div class="col-sm-3">
-                        <div class="input-group">
-                          <div class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-md" name="button">Search</button>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                          <div class="table-responsive text-center table-color">
-                                <table class="table table-bordered">
-                                  <thead class="text-center">
-                                    <tr>
-                                      <th>No</th>
-                                      <th>Site Name</th>
-                                      <th>Title</th>
-                                      <th>Update Date</th>
-                                      <th>Job Type</th>
-                                      <th>Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>1</td>
-                                      <td>Business Analyst</td>
-                                      <td>Indeed.com</td>
-                                      <td>Indeed India</td>
-                                      <td>June 12, 2017</td>
-                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
-                                    </tr>
-                                   <tr>
-                                      <td>2</td>
-                                      <td>Business Analyst</td>
-                                      <td>Indeed.com</td>
-                                      <td>Indeed India</td>
-                                      <td>June 12, 2017</td>
-                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
-                                    </tr>
-                                    <tr>
-                                      <td>3</td>
-                                      <td>Business Analyst</td>
-                                      <td>Indeed.com</td>
-                                      <td>Indeed India</td>
-                                      <td>June 12, 2017</td>
-                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
-                                    </tr>
-                                    <tr>
-                                      <td>4</td>
-                                      <td>Business Analyst</td>
-                                      <td>Indeed.com</td>
-                                      <td>Indeed India</td>
-                                      <td>June 12, 2017</td>
-                                      <td><a href="#">Edit</a> <a href="">Delete</a></td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                      </div>
-                  </div>
-              </div>
             </div>
         </div>
-      </div>
+    </div>
+</div>
 
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src='{% static "js/js/bootstrap.min.js" %}'></script>
-        <script src='{% static "js/jquery.nice-select.min.js" %}'></script>
-        <script src='{% static "js/main.js" %}'></script>
-    </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src='{% static "js/js/bootstrap.min.js" %}'></script>
+<script src='{% static "js/jquery.nice-select.min.js" %}'></script>
+<script src='{% static "js/main.js" %}'></script>
+</body>
 </html>

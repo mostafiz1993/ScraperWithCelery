@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, render, redirect
 import urllib
 from bs4 import BeautifulSoup
@@ -13,12 +14,61 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-def index(request):
-    if request.user.is_authenticated:
+@login_required(login_url='/home/index/')
+def addParserJob(request):
+    if request.method == "POST":
+        form = JobParserFrom(request.POST)
+        if form.is_valid():
+            siteName = form.cleaned_data['siteName']
+            siteURL = form.cleaned_data['siteURL']
+            searchSyntax = form.cleaned_data['searchSyntax']
+            jobTitle = form.cleaned_data['jobTitle']
+            location = form.cleaned_data['location']
+            jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax,
+                                                 jobTitle=jobTitle,location=location)
+            jobParser.save()
+            # print(siteName)
+            # print(siteURL)
+            # print(searchSyntax)
+            form = JobParserFrom()
+            jobParserListJson = getAllJobParser()
+            return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+
+    else:
         form = JobParserFrom()
+
+    jobParserListJson = getAllJobParser()
+    return render(request, 'newJobParser.html', {"form":form, "jobParserListJson": json.loads(jobParserListJson)})
+
+
+def index(request):
+    print(request.user)
+    if request.user.is_authenticated:
+        #print("auth")
+        if request.method == "POST":
+            form = JobParserFrom(request.POST)
+            if form.is_valid():
+                siteName = form.cleaned_data['siteName']
+                siteURL = form.cleaned_data['siteURL']
+                searchSyntax = form.cleaned_data['searchSyntax']
+                jobTitle = form.cleaned_data['jobTitle']
+                location = form.cleaned_data['location']
+                jobParser = JobParser.objects.create(siteName=siteName, siteURL=siteURL, searchSyntax=searchSyntax,
+                                                     jobTitle=jobTitle, location=location)
+                jobParser.save()
+                # print(siteName)
+                # print(siteURL)
+                # print(searchSyntax)
+                form = JobParserFrom()
+                jobParserListJson = getAllJobParser()
+                return render(request, 'newJobParser.html',
+                              {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+
+        else:
+            form = JobParserFrom()
+
         jobParserListJson = getAllJobParser()
-        return render(request, 'newJobParser.html',
-                  {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+        return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
     else:
         if request.method == 'POST':
             form = LoginForm(request.POST)
@@ -38,49 +88,23 @@ def index(request):
                     jobParserListJson = getAllJobParser()
                     if not (User.objects.filter(username=user).exists() or User.objects.filter(email=user).exists()):
                         User.objects.create_user(user, user, password)
-                        user = authenticate(username=user, password=password)
-                        login(request, user)
+                    user = authenticate(username=user, password=password)
+                    login(request, user)
                     return render(request, 'newJobParser.html',
                                   {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
                 else:
                     print("login fail")
                     loginForm = LoginForm()
                     return render(request,'index.html',{'form' : loginForm})
-        else:
-            loginForm = LoginForm()
+
+        loginForm = LoginForm()
         return render(request,'index.html',{'form' : loginForm})
 
 
 def logout_view(request):
     logout(request)
-    loginForm = LoginForm()
-    return render(request, 'index.html', {'form': loginForm})
-
-def addParserJob(request):
-    if request.method == "POST":
-        form = JobParserFrom(request.POST)
-        if form.is_valid():
-            siteName = form.cleaned_data['siteName']
-            siteURL = form.cleaned_data['siteURL']
-            searchSyntax = form.cleaned_data['searchSyntax']
-            jobTitle = form.cleaned_data['jobTitle']
-            jobCategory= form.cleaned_data['jobCategory']
-            location = form.cleaned_data['location']
-            jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax,
-                                                 jobTitle=jobTitle,jobCategory=jobCategory,location=location)
-            jobParser.save()
-            # print(siteName)
-            # print(siteURL)
-            # print(searchSyntax)
-            form = JobParserFrom()
-            jobParserListJson = getAllJobParser()
-            return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
-
-    else:
-        form = JobParserFrom()
-
-    jobParserListJson = getAllJobParser()
-    return render(request, 'newJobParser.html', {"form":form, "jobParserListJson": json.loads(jobParserListJson)})
+    #loginForm = LoginForm()
+    return render(request, 'logout.html')
 
 def getAllJobParser():
     jobParserList = JobParser.objects.all()
@@ -97,7 +121,47 @@ def getAllJobParser():
     return jobParserListJson
 
 def addJobInScheduler(request):
-    return render(request,'jobScheduler.html')
+    if request.method == "POST":
+        form = JobSchedulerForm(request.POST)
+        if form.is_valid():
+            siteURL = form.cleaned_data['siteURL']
+            jobTitle = form.cleaned_data['jobTitle']
+            location = form.cleaned_data['location']
+            recurrence = form.cleaned_data['recurrence']
+            oneTimeProcess = form.cleaned_data['oneTimeProcess']
+            dailyStartTime = form.cleaned_data['dailyStartTime']
+
+            jobScheduler = JobScheduler.objects.create(siteURL=siteURL,jobTitle=jobTitle,location=location,
+                                                       recurrence=recurrence)
+            jobScheduler.save()
+            print(siteURL)
+
+            form = JobSchedulerForm()
+            scheduledJobListJson = getAllScheduledJob()
+            return render(request, 'jobScheduler.html',
+                          {"form": form, "scheduledJobListJson": json.loads(scheduledJobListJson)})
+
+    else:
+        form = JobSchedulerForm()
+        #form = JobSchedulerForm(initial={'jobTitle': "hello"})
+
+    return render(request, 'jobScheduler.html', {"form": form})
+
+def getAllScheduledJob():
+    jobSchedulerList = JobScheduler.objects.all()
+    results = []
+    for scheduledJobRow in jobSchedulerList:
+        scheduledJob = {}
+
+        scheduledJob['siteURL'] = scheduledJobRow.siteURL
+        scheduledJob['jobTitle'] = scheduledJobRow.jobTitle
+        scheduledJob['jobId'] = scheduledJobRow.id
+        scheduledJob['status'] = scheduledJobRow.status
+        scheduledJob['created'] = scheduledJobRow.created.strftime("%d-%m-%Y")
+
+        results.append(scheduledJob)
+    jobSchedulerListJson = json.dumps(results)
+    return jobSchedulerListJson
 
 def deleteJobParser(request,jobparserid):
     print(jobparserid)

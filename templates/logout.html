@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customize Template For Job Data Aggregation</title>
+    <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet">
+    <link href='{% static "css/nice-select.css" %}' rel="stylesheet">
+    <link href='{% static "css/style.css" %}' rel="stylesheet">
+    <link href='{% static "css/responsive.css" %}' rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+<body>
+
+
+<div class="form-group">
+   <label class="col-md-4 control-label" for="login"></label>
+   <div class="col-md-4 center-block">
+       <button type="submit" class="btn btn-primary center-block" onClick="location.href='/home/index/'" name="login" id="login"  value="Log In">Log In</button>
+   </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='{% static "js/jquery.nice-select.min.js" %}'></script>
+<script src='{% static "js/main.js" %}'></script>
+</body>
+</html>

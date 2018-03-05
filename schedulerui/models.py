@@ -20,8 +20,9 @@ class JobParser(models.Model):
     siteURL = models.CharField(max_length=200, blank=False)
     searchSyntax = models.CharField(max_length=200, blank=True, null = True)
     jobTitle = models.CharField(max_length=200, blank=True, null = True)
-    # jobCategory = models.CharField(max_length=200, blank=True, null = True)
     location = models.CharField(max_length=200, blank=True, null = True)
+
+    # jobCategory = models.CharField(max_length=200, blank=True, null = True)
     # city = models.CharField(max_length=200, blank=True, null = True)
     # state = models.CharField(max_length=200, blank=True, null = True)
     # country = models.CharField(max_length=200, blank=True, null = True)
@@ -36,6 +37,16 @@ class JobParser(models.Model):
     # aboutCompany = models.CharField(max_length=200, blank=True, null = True)
     # numOfJob = models.CharField(max_length=200, blank=True, null = True)
     created = models.DateTimeField(default=timezone.now)
-    # updated = models.DateTimeField(default=timezone.now)
+    updated = models.DateTimeField(default=timezone.now)
 
 
+class JobScheduler(models.Model):
+    siteURL = models.CharField(max_length=200, blank=False)
+    jobTitle = models.CharField(max_length=200, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+
+    jobId = models.CharField(null=False, max_length=300, blank=False)
+    created = models.DateTimeField(default=timezone.now)
+    updated = models.DateTimeField(default=timezone.now)
+    recurrence = models.CharField(default="Daily", max_length=300, blank=False)
+    status = models.CharField(max_length=5,default='PENDING')
