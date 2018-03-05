@@ -16,12 +16,20 @@
         <![endif]-->
 </head>
 <body>
+<div class="pull-right">
+        <ul class="nav navbar-nav">
+            <li><button type="submit" class="btn navbar-btn btn-danger" onClick="location.href='/home/index'" name="logout" id="logout"  value="Log Out">Log Out</button></li>
+        </ul>
+</div>
 <div class="page-header">
+
     <div class="container">
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title">
                     <h3>New Job Aggregator Template</h3>
+
                 </div>
             </div>
         </div>
@@ -103,7 +111,7 @@
                                     <th>Site Name</th>
                                     <th>Site URL</th>
                                     <th>Job Title</th>
-                                    <th>Update Date</th>
+                                    <th>Create Date</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -113,7 +121,7 @@
                                         <td>{{ jobParser.siteName}}</td>
                                         <td>{{ jobParser.siteURL}}</td>
                                         <td>{{ jobParser.jobTitle }}</td>
-                                        <td>{{ jobParser.updated }}</td>
+                                        <td>{{ jobParser.created }}</td>
                                         <td><a href="/home/deletejobparser/{{ jobParser.jobId }}" >Delete</a>
                                     </tr>
 

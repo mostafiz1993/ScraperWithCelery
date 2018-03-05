@@ -9,27 +9,52 @@ import json
 from .forms import *
 from .models import *
 import requests
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 def index(request):
-    auth = requests.post("http://api.raasforce.com/Token","grant_type=password&username=azim.raasforce@gmail.com&password=123456")
-    content = auth.json()
-    accessToken = ""
-    for k,v in content.items():
-        if(k == "access_token"):
-            accessToken = v
-
-    if accessToken != "":
-        print("login success")
+    if request.user.is_authenticated:
+        form = JobParserFrom()
+        jobParserListJson = getAllJobParser()
+        return render(request, 'newJobParser.html',
+                  {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
     else:
-        print("login fail")
-    #print(content)
+        if request.method == 'POST':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                user = form.cleaned_data['userName']
+                password = form.cleaned_data['password']
+                auth = requests.post("http://api.raasforce.com/Token","grant_type=password&username=" + user +"&password=" + password)
+                content = auth.json()
+                accessToken = ""
+                for k,v in content.items():
+                    if(k == "access_token"):
+                        accessToken = v
 
-    #print(content['results'])
-    # if content['access_token']:
-    #     print(content['expires'])
-    # else:
-    #     print("hi")
-    return render(request,'index.html')
+                if accessToken != "":
+                    print("login success")
+                    form = JobParserFrom()
+                    jobParserListJson = getAllJobParser()
+                    if not (User.objects.filter(username=user).exists() or User.objects.filter(email=user).exists()):
+                        User.objects.create_user(user, user, password)
+                        user = authenticate(username=user, password=password)
+                        login(request, user)
+                    return render(request, 'newJobParser.html',
+                                  {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+                else:
+                    print("login fail")
+                    loginForm = LoginForm()
+                    return render(request,'index.html',{'form' : loginForm})
+        else:
+            loginForm = LoginForm()
+        return render(request,'index.html',{'form' : loginForm})
+
+
+def logout_view(request):
+    logout(request)
+    loginForm = LoginForm()
+    return render(request, 'index.html', {'form': loginForm})
 
 def addParserJob(request):
     if request.method == "POST":
@@ -66,7 +91,7 @@ def getAllJobParser():
         jobParserJson['siteURL'] = jobParser.siteURL
         jobParserJson['jobTitle'] = jobParser.jobTitle
         jobParserJson['jobId'] = jobParser.id
-        jobParserJson['updated'] = jobParser.updated.strftime("%d-%m-%Y")
+        jobParserJson['created'] = jobParser.created.strftime("%d-%m-%Y")
         results.append(jobParserJson)
     jobParserListJson = json.dumps(results)
     return jobParserListJson

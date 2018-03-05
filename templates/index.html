@@ -25,25 +25,36 @@
              <div class="sign-logo text-center">
                  <a href="https://raasforce.com"><img src="{{ MEDIA_URL }}images/login-logo.png" alt=""></a>
              </div>
-              <form action="#" method="get">
-                <div class="form-group">
-                  <label>You Email</label>
-                  <input type="email" class="form-control" placeholder="Your Mail">
+                <form method="post" >
+                {% csrf_token %}
+                {% for error in form.non_field_errors %}
+                <div class="form-group has-errors text-danger small">
+                    {{error}}
                 </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Enter Password">
+                {% endfor %}
+                {% for field in form %}
+                <div class="form-group has-errors text-danger small">
+                    {{field.errors}}
                 </div>
+
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                    {{ field }}
+                    {{ field.help_text }}
+                </div>
+                {% endfor %}
                 <div class="row">
                   <div class="col-sm-4">
                     <div class="input-group">
                       <div class="input-group-btn">
-                        <button type="button" class="btn btn-primary" name="button">Sign In</button>
+                        <button type="submit" class="btn btn-primary" name="button">Sign In</button>
                       </div>
                     </div>
                     </div>
                 </div>
-              </form>
+                </form>
+
             </div>
          </div>
         </div>

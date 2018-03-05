@@ -25,7 +25,7 @@ class JobParserFrom(forms.Form):
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     searchSyntax = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    #jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     # city = forms.CharField(max_length=200)
     # state = forms.CharField(max_length=200)
@@ -40,3 +40,16 @@ class JobParserFrom(forms.Form):
     # jobDesc = forms.CharField(max_length=200)
     # aboutCompany = forms.CharField(max_length=200)
     # numOfJob = forms.CharField(max_length=200)
+class LoginForm(forms.Form):
+    userName = forms.EmailField(widget=forms.TextInput(
+        attrs={
+        'class':'form-control',
+        'placeholder':'Username'
+        }
+    ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+        'class':'form-control',
+        'placeholder':'Password'
+        }
+    ))
