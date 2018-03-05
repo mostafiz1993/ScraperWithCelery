@@ -2,6 +2,16 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 import urllib
+import datetime
+
+property = {}
+identifierofEachJobAttr = {}
+identifierofEachJobUrl = {}
+jobTitileAttr = {}
+jobCompanyAttr = {}
+jobLocationAttr = {}
+paginationAttr = {}
+csvFileName = ''
 
 def getSoap(url):
     try:
@@ -10,6 +20,23 @@ def getSoap(url):
     except:
         r = requests.get(url.format('1'))
         return BeautifulSoup(r.content, 'html.parser')
+
+def csv_file_name_generation(csvFile):
+    csvFileName =  datetime.datetime.now().strftime("%I%M%S%p_%B%d_%Y")+ '_' + csvFile
+    return open(csvFileName, 'w')
+
+
+
+
+def generate_csv(jobTitle,jobLocation,jobCompany,writer):
+    try:
+        writer.writerow({'JobTitle': jobTitle, 'JobLocation': jobLocation, 'Company': jobCompany})
+        #csvF.write(jobTitle + ',' + jobLocation + ',' + jobCompany + '\n')
+    except:
+        pass
+
+
+
 
 def initParameter(csvFile):
     with open(csvFile, 'rb') as csvfile:
@@ -25,7 +52,7 @@ def initParameter(csvFile):
         jobLocationAttr[property['jobLocationAttr']] = property['valueOfjJobLocationAttr']
         paginationAttr[property['paginationAttr']] = property['valueOfPaginationAttr']
 
-def parse_each_page(soup):
+def parse_each_page(soup,writer):
     job = soup.find_all(property['eachJobIn'], attrs = identifierofEachJobAttr)
     for eachJob in job:
         if int(property['directEachjobUrl']) == 1:
@@ -86,12 +113,10 @@ def parse_each_page(soup):
             except:
                 jobLocation = ''
                 pass
-        print(jobTitle)
-        print(company)
-        print(jobLocation)
+        generate_csv(jobTitle,jobLocation,company,writer)
 
 
-def go_to_next_page(url):
+def go_to_next_page(url,writer):
     if int(property['prefixPaginationFlag']) == 1:
         try:
             urlopen = property['prefix'] + url
@@ -105,61 +130,52 @@ def go_to_next_page(url):
     print(url)
 
     soup = getSoap(urlopen)
-    parse_each_page(soup)
+    parse_each_page(soup,writer)
     if int(property['directPagination']) != 1:
         pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
         next = pagination[0].find_all(property['jobPaginationBranchAttr'])[int(property['jobPaginationBranchInedex'])]
         try:
-            go_to_next_page(next['href'])
+            go_to_next_page(next['href'],writer)
         except:
             return
 
     else:
         pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
-        print(pagination[0]['href'])
+        #print(pagination[0]['href'])
         try:
-            go_to_next_page(pagination[0]['href'])
+            go_to_next_page(pagination[0]['href'],writer)
         except:
             return
 
-
-
-
-
-
-
-
-def runParser(jobURL,location,jobTtile,searchSyntax,csvName):
+def runParser(searchSyntax,location,jobTtile,csvName):
     #url = 'https://www.simplyhired.com/search?q=data+scientist&l=New+York'
     par1 = searchSyntax[searchSyntax.find('?') + 1:searchSyntax.find('=')]
     par2 = searchSyntax[searchSyntax.find('&') + 1:searchSyntax.rfind('='):]
     encodedurl = {par1: jobTtile, par2: location}
     url =  searchSyntax[:searchSyntax.find('?') + 1] + urllib.urlencode(encodedurl)
     soup = getSoap(url)
-    property = {}
-    identifierofEachJobAttr = {}
-    identifierofEachJobUrl = {}
-    jobTitileAttr = {}
-    jobCompanyAttr = {}
-    jobLocationAttr = {}
-    paginationAttr = {}
-
-
     initParameter(csvName)
-
-    parse_each_page(soup)
+    fieldnames = ['JobTitle', 'JobLocation', 'Company']
+    csvF = csv_file_name_generation(csvName)
+    writer = csv.DictWriter(csvF, fieldnames=fieldnames)
+    parse_each_page(soup,writer)
 
     if int(property['directPagination']) != 1:
         pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
         next = pagination[0].find_all(property['jobPaginationBranchAttr'])[int(property['jobPaginationBranchInedex'])]
         try:
-            go_to_next_page(next['href'])
+            go_to_next_page(next['href'],writer)
         except:
             pass
     else:
         pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
         # print pagination[0]['href']
         try:
-            go_to_next_page(pagination[0]['href'])
+            go_to_next_page(pagination[0]['href'],writer)
         except:
             pass
+
+
+#runParser('https://www.simplyhired.com/search?q=data+scientist&l=New+York','New York' ,'Etl developer','simplyhire.csv')
+
+
