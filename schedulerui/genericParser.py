@@ -130,9 +130,12 @@ def go_to_next_page(url):
 
 
 def runParser(jobURL,location,jobTtile,searchSyntax,csvName):
-    soup = getSoap('https://www.monster.com/jobs/search/?q=Data-Scientist&where=new-york&intcid=skr_navigation_nhpso_searchMain')
-
-
+    #url = 'https://www.simplyhired.com/search?q=data+scientist&l=New+York'
+    par1 = searchSyntax[searchSyntax.find('?') + 1:searchSyntax.find('=')]
+    par2 = searchSyntax[searchSyntax.find('&') + 1:searchSyntax.rfind('='):]
+    encodedurl = {par1: jobTtile, par2: location}
+    url =  searchSyntax[:searchSyntax.find('?') + 1] + urllib.urlencode(encodedurl)
+    soup = getSoap(url)
     property = {}
     identifierofEachJobAttr = {}
     identifierofEachJobUrl = {}
@@ -142,7 +145,7 @@ def runParser(jobURL,location,jobTtile,searchSyntax,csvName):
     paginationAttr = {}
 
 
-    initParameter('monster.csv')
+    initParameter(csvName)
 
     parse_each_page(soup)
 
