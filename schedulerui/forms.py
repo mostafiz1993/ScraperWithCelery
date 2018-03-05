@@ -61,7 +61,6 @@ class LoginForm(forms.Form):
 
 def getJobParserURL():
     #parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
-
     jobParserList = JobParser.objects.all()
     results = []
     for jobParser in jobParserList:
