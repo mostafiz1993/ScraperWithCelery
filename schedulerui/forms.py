@@ -1,5 +1,7 @@
 from django import forms
 
+from schedulerui.models import JobParser
+
 SITE_NAME = (
     ( 'https://www.indeed.com/jobs?', 'indeed'),
     ( 'www.simplyhired.com', 'simplydired'),
@@ -58,8 +60,14 @@ class LoginForm(forms.Form):
     ))
 
 def getJobParserURL():
-    parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
-    return parserURLList
+    #parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
+
+    jobParserList = JobParser.objects.all()
+    results = []
+    for jobParser in jobParserList:
+        tempTuple = (jobParser.siteURL,jobParser.siteURL)
+        results.append(tempTuple)
+    return results
 
 class JobSchedulerForm(forms.Form):
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(choices=getJobParserURL(),attrs={'class': 'form-control'}))
