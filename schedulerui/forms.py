@@ -7,6 +7,8 @@ SITE_NAME = (
     ( 'www.simplyhired.com', 'simplydired'),
 
 )
+
+
 RECURRENCE_LIST = (
     ( '1', 'Daily'),
     ( '2', 'Every Two Day'),
@@ -28,9 +30,9 @@ class JobParserFrom(forms.Form):
     siteName = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     searchSyntax = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    #jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    #jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    #location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     # city = forms.CharField(max_length=200)
     # state = forms.CharField(max_length=200)
     # country = forms.CharField(max_length=200)
@@ -59,6 +61,12 @@ class LoginForm(forms.Form):
         }
     ))
 
+def getDayTime():
+    results = []
+    for i in range(0,24):
+        tempTuple = (i,i)
+        results.append(tempTuple)
+    return results
 def getJobParserURL():
     #parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
     jobParserList = JobParser.objects.all()
@@ -66,12 +74,17 @@ def getJobParserURL():
     for jobParser in jobParserList:
         tempTuple = (jobParser.siteURL,jobParser.siteURL)
         results.append(tempTuple)
+    #print(results)
     return results
+
+    #return parserURLList
 
 class JobSchedulerForm(forms.Form):
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(choices=getJobParserURL(),attrs={'class': 'form-control'}))
     jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    dailyStartTime = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    #dailyStartTime = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    startingHour = forms.CharField(max_length=200, required=False,
+                              widget=forms.Select(choices=getDayTime(), attrs={'class': 'form-control'}))
     recurrence = forms.CharField(max_length=5, required=True,widget=forms.Select(choices=RECURRENCE_LIST,attrs={'class':'form-control'}))
     oneTimeProcess = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'checkbox'}))

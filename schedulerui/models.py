@@ -19,9 +19,8 @@ class JobParser(models.Model):
     siteName = models.CharField(max_length=200, blank=False)
     siteURL = models.CharField(max_length=200, blank=False)
     searchSyntax = models.CharField(max_length=200, blank=True, null = True)
-    jobTitle = models.CharField(max_length=200, blank=True, null = True)
-    location = models.CharField(max_length=200, blank=True, null = True)
-
+    #jobTitle = models.CharField(max_length=200, blank=True, null = True)
+    #location = models.CharField(max_length=200, blank=True, null = True)
     # jobCategory = models.CharField(max_length=200, blank=True, null = True)
     # city = models.CharField(max_length=200, blank=True, null = True)
     # state = models.CharField(max_length=200, blank=True, null = True)
@@ -49,4 +48,4 @@ class JobScheduler(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(default=timezone.now)
     recurrence = models.CharField(default="Daily", max_length=300, blank=False)
-    status = models.CharField(max_length=5,default='PENDING')
+    status = models.CharField(max_length=5,default='SCHEDULED')
