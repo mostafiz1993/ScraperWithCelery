@@ -31,7 +31,7 @@ BROKER_URL = 'amqp://guest:guest@localhost//'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_IMPORTS = ('schedulerui.scheduledTask')
+CELERY_IMPORTS = ('schedulerui.genericParser')
 # Application definition
 
 INSTALLED_APPS = (

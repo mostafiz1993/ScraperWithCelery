@@ -3,6 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 import urllib
 import datetime
+import time
+from celery import shared_task,current_task
+from .TaskState import *
+
+
 
 property = {}
 identifierofEachJobAttr = {}
@@ -147,8 +152,11 @@ def go_to_next_page(url,writer):
         except:
             return
 
+@shared_task
 def runParser(searchSyntax,location,jobTtile,csvName):
     #url = 'https://www.simplyhired.com/search?q=data+scientist&l=New+York'
+
+    current_task.update_state(state=TaskState.SCHEDULED)
     par1 = searchSyntax[searchSyntax.find('?') + 1:searchSyntax.find('=')]
     par2 = searchSyntax[searchSyntax.find('&') + 1:searchSyntax.rfind('='):]
     encodedurl = {par1: jobTtile, par2: location}
@@ -158,8 +166,9 @@ def runParser(searchSyntax,location,jobTtile,csvName):
     fieldnames = ['JobTitle', 'JobLocation', 'Company']
     csvF = csv_file_name_generation(csvName)
     writer = csv.DictWriter(csvF, fieldnames=fieldnames)
+    current_task.update_state(state=TaskState.STARTED)
     parse_each_page(soup,writer)
-
+    current_task.update_state(state=TaskState.RUNNING)
     if int(property['directPagination']) != 1:
         pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
         next = pagination[0].find_all(property['jobPaginationBranchAttr'])[int(property['jobPaginationBranchInedex'])]
@@ -175,7 +184,7 @@ def runParser(searchSyntax,location,jobTtile,csvName):
         except:
             pass
 
+    current_task.update_state(state=TaskState.SUCCESS)
 
-#runParser('https://www.simplyhired.com/search?q=data+scientist&l=New+York','New York' ,'Etl developer','simplyhire.csv')
 
 

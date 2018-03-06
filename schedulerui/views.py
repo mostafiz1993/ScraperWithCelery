@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from .scheduledTask import *
 from django.utils import timezone
 from datetime import datetime
+from .genericParser import runParser
 
 @login_required(login_url='/home/index/')
 def addParserJob(request):
@@ -167,17 +168,28 @@ def addJobInScheduler(request):
             dailyStartTime = form.cleaned_data['startingHour']
 
             firstTime = calculateFirstTime(dailyStartTime)
+            jobParser = JobParser.objects.filter(siteURL=siteURL)#.order_by(('siteURL').desc())
 
+            fileName = jobParser.fileName
+            searchSyntax = jobParser.searchSyntax
+            #print(fileName)
+            #print(searchSyntax)
             if(oneTimeProcess):
                 secondTime = -1
-                job = taskState.apply_async(args=[firstTime,secondTime], countdown=1)
+                #job = taskState.apply_async(args=[firstTime,secondTime], countdown=1)
+                #searchSyntax ='https://www.simplyhired.com/search?q=data+scientist&l=New+York'
+
+
+                job = runParser.apply_async(args=[searchSyntax,location,jobTitle,fileName,firstTime,secondTime], countdown=1)
                 state = job.state
                 jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
                                                            recurrence=recurrence,jobId=job.id,status=state)
                 jobScheduler.save()
             else:
                 secondTime = calculateSecondTime(recurrence)
-                job = taskState.apply_async(args=[firstTime, secondTime], countdown=1)
+                #job = taskState.apply_async(args=[firstTime, secondTime], countdown=1)
+                job = runParser.apply_async(args=[searchSyntax, location, jobTitle, fileName, firstTime, secondTime],
+                                            countdown=1)
                 state = job.state
                 jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
                                                            recurrence=recurrence, jobId=job.id, status=state)

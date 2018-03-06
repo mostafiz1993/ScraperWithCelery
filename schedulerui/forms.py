@@ -30,6 +30,7 @@ class JobParserFrom(forms.Form):
     siteName = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
     searchSyntax = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    fileName = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     #jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     #jobCategory = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     #location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
@@ -67,9 +68,12 @@ def getDayTime():
         tempTuple = (i,i)
         results.append(tempTuple)
     return results
+
 def getJobParserURL():
     #parserURLList = (('hello','hello'),('hi','hi'),('ami','ami'))
+    #jobParserList = []
     jobParserList = JobParser.objects.all()
+
     results = []
     for jobParser in jobParserList:
         tempTuple = (jobParser.siteURL,jobParser.siteURL)
@@ -77,7 +81,6 @@ def getJobParserURL():
     #print(results)
     return results
 
-    #return parserURLList
 
 class JobSchedulerForm(forms.Form):
     siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(choices=getJobParserURL(),attrs={'class': 'form-control'}))
