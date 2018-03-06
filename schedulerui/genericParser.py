@@ -153,38 +153,46 @@ def go_to_next_page(url,writer):
             return
 
 @shared_task
-def runParser(searchSyntax,location,jobTtile,csvName):
+def runParser(searchSyntax,location,jobTtile,csvName,firstTime,secondTime):
     #url = 'https://www.simplyhired.com/search?q=data+scientist&l=New+York'
 
     current_task.update_state(state=TaskState.SCHEDULED)
+    time.sleep(firstTime)
     par1 = searchSyntax[searchSyntax.find('?') + 1:searchSyntax.find('=')]
     par2 = searchSyntax[searchSyntax.find('&') + 1:searchSyntax.rfind('='):]
     encodedurl = {par1: jobTtile, par2: location}
     url =  searchSyntax[:searchSyntax.find('?') + 1] + urllib.urlencode(encodedurl)
-    soup = getSoap(url)
-    initParameter(csvName)
-    fieldnames = ['JobTitle', 'JobLocation', 'Company']
-    csvF = csv_file_name_generation(csvName)
-    writer = csv.DictWriter(csvF, fieldnames=fieldnames)
-    current_task.update_state(state=TaskState.STARTED)
-    parse_each_page(soup,writer)
-    current_task.update_state(state=TaskState.RUNNING)
-    if int(property['directPagination']) != 1:
-        pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
-        next = pagination[0].find_all(property['jobPaginationBranchAttr'])[int(property['jobPaginationBranchInedex'])]
-        try:
-            go_to_next_page(next['href'],writer)
-        except:
-            pass
-    else:
-        pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
-        # print pagination[0]['href']
-        try:
-            go_to_next_page(pagination[0]['href'],writer)
-        except:
-            pass
 
-    current_task.update_state(state=TaskState.SUCCESS)
+    while True:
+        try:
+            current_task.update_state(state=TaskState.RUNNING)
+            soup = getSoap(url)
+            initParameter(csvName)
+            fieldnames = ['JobTitle', 'JobLocation', 'Company']
+            csvF = csv_file_name_generation(csvName)
+            writer = csv.DictWriter(csvF, fieldnames=fieldnames)
+
+            parse_each_page(soup,writer)
+            current_task.update_state(state=TaskState.RUNNING)
+            if int(property['directPagination']) != 1:
+                pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
+                next = pagination[0].find_all(property['jobPaginationBranchAttr'])[int(property['jobPaginationBranchInedex'])]
+                try:
+                    go_to_next_page(next['href'],writer)
+                except:
+                    pass
+            else:
+                pagination = soup.find_all(property['paginationIn'], attrs=paginationAttr)
+                # print pagination[0]['href']
+                try:
+                    go_to_next_page(pagination[0]['href'],writer)
+                except:
+                    pass
+
+            current_task.update_state(state=TaskState.SUCCESS)
+            time.sleep(secondTime)
+        except:
+            current_task.update_state(state=TaskState.FAILURE)
 
 
 

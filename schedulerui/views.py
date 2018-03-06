@@ -10,7 +10,6 @@ import requests
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .scheduledTask import *
 from django.utils import timezone
 from datetime import datetime
 from .genericParser import runParser
@@ -23,9 +22,10 @@ def addParserJob(request):
             siteName = form.cleaned_data['siteName']
             siteURL = form.cleaned_data['siteURL']
             searchSyntax = form.cleaned_data['searchSyntax']
-            #jobTitle = form.cleaned_data['jobTitle']
-            #location = form.cleaned_data['location']
-            jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax)
+            fileName = form.cleaned_data['fileName']
+
+            jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax,
+                                                 fileName=fileName)
             jobParser.save()
             # print(siteName)
             # print(siteURL)
@@ -156,6 +156,7 @@ def killJobByJobId(jobId):
     except:
         return False
 
+#@login_required(login_url='/home/index/')
 def addJobInScheduler(request):
     if request.method == "POST":
         form = JobSchedulerForm(request.POST)
@@ -168,7 +169,7 @@ def addJobInScheduler(request):
             dailyStartTime = form.cleaned_data['startingHour']
 
             firstTime = calculateFirstTime(dailyStartTime)
-            jobParser = JobParser.objects.filter(siteURL=siteURL)#.order_by(('siteURL').desc())
+            jobParser = JobParser.objects.filter(siteURL=siteURL).order_by('siteURL').reverse()
 
             fileName = jobParser.fileName
             searchSyntax = jobParser.searchSyntax
@@ -177,8 +178,6 @@ def addJobInScheduler(request):
             if(oneTimeProcess):
                 secondTime = -1
                 #job = taskState.apply_async(args=[firstTime,secondTime], countdown=1)
-                #searchSyntax ='https://www.simplyhired.com/search?q=data+scientist&l=New+York'
-
 
                 job = runParser.apply_async(args=[searchSyntax,location,jobTitle,fileName,firstTime,secondTime], countdown=1)
                 state = job.state

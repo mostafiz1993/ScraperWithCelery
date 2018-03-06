@@ -81,9 +81,10 @@ def getJobParserURL():
     #print(results)
     return results
 
-
+#choices=getJobParserURL(),
 class JobSchedulerForm(forms.Form):
-    siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(choices=getJobParserURL(),attrs={'class': 'form-control'}))
+    #siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(attrs={'class': 'form-control'}))
+    siteURL = forms.ModelChoiceField(queryset=JobParser.objects.values_list('siteURL', flat=True))
     jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     #dailyStartTime = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
