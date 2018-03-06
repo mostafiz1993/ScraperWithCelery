@@ -84,7 +84,7 @@ def getJobParserURL():
 #choices=getJobParserURL(),
 class JobSchedulerForm(forms.Form):
     #siteURL = forms.CharField(max_length=200, required=True,widget=forms.Select(attrs={'class': 'form-control'}))
-    siteURL = forms.ModelChoiceField(queryset=JobParser.objects.values_list('siteURL', flat=True))
+    siteURL = forms.ModelChoiceField(queryset=JobParser.objects.values_list('siteURL',flat=True))
     jobTitle = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     location = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
     #dailyStartTime = forms.CharField(max_length=200, required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
@@ -92,3 +92,5 @@ class JobSchedulerForm(forms.Form):
                               widget=forms.Select(choices=getDayTime(), attrs={'class': 'form-control'}))
     recurrence = forms.CharField(max_length=5, required=True,widget=forms.Select(choices=RECURRENCE_LIST,attrs={'class':'form-control'}))
     oneTimeProcess = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'checkbox'}))
+
+

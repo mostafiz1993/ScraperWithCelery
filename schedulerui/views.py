@@ -23,6 +23,7 @@ def addParserJob(request):
             siteURL = form.cleaned_data['siteURL']
             searchSyntax = form.cleaned_data['searchSyntax']
             fileName = form.cleaned_data['fileName']
+            print("hello" + searchSyntax)
 
             jobParser = JobParser.objects.create(siteName=siteName,siteURL=siteURL,searchSyntax=searchSyntax,
                                                  fileName=fileName)
@@ -51,10 +52,15 @@ def index(request):
                 siteName = form.cleaned_data['siteName']
                 siteURL = form.cleaned_data['siteURL']
                 searchSyntax = form.cleaned_data['searchSyntax']
-                #jobTitle = form.cleaned_data['jobTitle']
-                #location = form.cleaned_data['location']
-                jobParser = JobParser.objects.create(siteName=siteName, siteURL=siteURL, searchSyntax=searchSyntax)
+                fileName = form.cleaned_data['fileName']
+                print("hello" + searchSyntax)
+
+                jobParser = JobParser.objects.create(siteName=siteName, siteURL=siteURL, searchSyntax=searchSyntax,
+                                                     fileName=fileName)
                 jobParser.save()
+                # print(siteName)
+                # print(siteURL)
+                # print(searchSyntax)
                 form = JobParserFrom()
                 jobParserListJson = getAllJobParser()
                 return render(request, 'newJobParser.html',
@@ -65,6 +71,7 @@ def index(request):
 
         jobParserListJson = getAllJobParser()
         return render(request, 'newJobParser.html', {"form": form, "jobParserListJson": json.loads(jobParserListJson)})
+
     else:
         if request.method == 'POST':
             form = LoginForm(request.POST)
@@ -156,52 +163,60 @@ def killJobByJobId(jobId):
     except:
         return False
 
-#@login_required(login_url='/home/index/')
+@login_required(login_url='/home/index/')
 def addJobInScheduler(request):
     if request.method == "POST":
         form = JobSchedulerForm(request.POST)
-        if form.is_valid():
-            siteURL = form.cleaned_data['siteURL']
-            jobTitle = form.cleaned_data['jobTitle']
-            location = form.cleaned_data['location']
-            recurrence = form.cleaned_data['recurrence']
-            oneTimeProcess = form.cleaned_data['oneTimeProcess']
-            dailyStartTime = form.cleaned_data['startingHour']
+        #print(form)
+        #print(form.cleaned_data['siteURL'])
+        #if form.is_valid():
+        #print(form.cleaned_data['siteURL'])
+        # siteURL = form.cleaned_data['siteURL']
+        # jobTitle = form.cleaned_data['jobTitle']
+        # location = form.cleaned_data['location']
+        # recurrence = form.cleaned_data['recurrence']
+        # oneTimeProcess = form.cleaned_data['oneTimeProcess']
+        # dailyStartTime = form.cleaned_data['startingHour']
 
-            firstTime = calculateFirstTime(dailyStartTime)
-            jobParser = JobParser.objects.filter(siteURL=siteURL).order_by('siteURL').reverse()
+        siteURL =request.POST.get('siteURL')
+        jobTitle = request.POST.get('jobTitle')
+        location = request.POST.get('location')
+        recurrence = request.POST.get('recurrence')
+        oneTimeProcess = request.POST.get('oneTimeProcess')
+        dailyStartTime = request.POST.get('startingHour')
 
-            fileName = jobParser.fileName
-            searchSyntax = jobParser.searchSyntax
-            #print(fileName)
-            #print(searchSyntax)
-            if(oneTimeProcess):
-                secondTime = -1
-                #job = taskState.apply_async(args=[firstTime,secondTime], countdown=1)
+        firstTime = calculateFirstTime(dailyStartTime)
+        jobParser = JobParser.objects.get(siteURL=siteURL)#.order_by('siteURL').reverse()
+        fileName = jobParser.fileName
+        searchSyntax = jobParser.searchSyntax
 
-                job = runParser.apply_async(args=[searchSyntax,location,jobTitle,fileName,firstTime,secondTime], countdown=1)
-                state = job.state
-                jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
-                                                           recurrence=recurrence,jobId=job.id,status=state)
-                jobScheduler.save()
-            else:
-                secondTime = calculateSecondTime(recurrence)
-                #job = taskState.apply_async(args=[firstTime, secondTime], countdown=1)
-                job = runParser.apply_async(args=[searchSyntax, location, jobTitle, fileName, firstTime, secondTime],
-                                            countdown=1)
-                state = job.state
-                jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
-                                                           recurrence=recurrence, jobId=job.id, status=state)
+        if(oneTimeProcess):
+            secondTime = -1
+            #job = taskState.apply_async(args=[firstTime,secondTime], countdown=1)
 
-                jobScheduler.save()
+            job = runParser.apply_async(args=[searchSyntax,location,jobTitle,fileName,firstTime,secondTime], countdown=1)
+            state = job.state
+            jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
+                                                       recurrence=recurrence,jobId=job.id,status=state)
+            jobScheduler.save()
+        else:
+            secondTime = calculateSecondTime(recurrence)
+            #job = taskState.apply_async(args=[firstTime, secondTime], countdown=1)
+            job = runParser.apply_async(args=[searchSyntax, location, jobTitle, fileName, firstTime, secondTime],
+                                        countdown=1)
+            state = job.state
+            jobScheduler = JobScheduler.objects.create(siteURL=siteURL, jobTitle=jobTitle, location=location,
+                                                       recurrence=recurrence, jobId=job.id, status=state)
 
-            print(oneTimeProcess)
-            print(dailyStartTime)
+            jobScheduler.save()
 
-            form = JobSchedulerForm()
-            scheduledJobListJson = getAllScheduledJob()
-            return render(request, 'jobScheduler.html',
-                          {"form": form, "scheduledJobListJson": json.loads(scheduledJobListJson)})
+        print(oneTimeProcess)
+        print(dailyStartTime)
+
+        form = JobSchedulerForm()
+        scheduledJobListJson = getAllScheduledJob()
+        return render(request, 'jobScheduler.html',
+                      {"form": form, "scheduledJobListJson": json.loads(scheduledJobListJson)})
 
     else:
         form = JobSchedulerForm()

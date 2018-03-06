@@ -35,9 +35,16 @@ def csv_file_name_generation(csvFile):
 
 def generate_csv(jobTitle,jobLocation,jobCompany,writer):
     try:
-        writer.writerow({'JobTitle': jobTitle, 'JobLocation': jobLocation, 'Company': jobCompany})
+        import re
+
+        jobTitle = re.sub('[^0-9a-zA-Z]+', ' ', jobTitle)
+        jobLocation = re.sub('[^0-9a-zA-Z]+', ' ', jobLocation)
+        jobCompany = re.sub('[^0-9a-zA-Z]+', ' ', jobCompany)
+        print(jobTitle + jobLocation + jobCompany)
+        writer.writerow({'JobTitle': jobTitle.strip(' '), 'JobLocation': jobLocation.strip(' '), 'Company': jobCompany.strip(' ')})
         #csvF.write(jobTitle + ',' + jobLocation + ',' + jobCompany + '\n')
     except:
+        print('error found')
         pass
 
 
@@ -118,6 +125,7 @@ def parse_each_page(soup,writer):
             except:
                 jobLocation = ''
                 pass
+
         generate_csv(jobTitle,jobLocation,company,writer)
 
 
@@ -157,7 +165,8 @@ def runParser(searchSyntax,location,jobTtile,csvName,firstTime,secondTime):
     #url = 'https://www.simplyhired.com/search?q=data+scientist&l=New+York'
 
     current_task.update_state(state=TaskState.SCHEDULED)
-    time.sleep(firstTime)
+    print(firstTime)
+    #time.sleep(firstTime)
     par1 = searchSyntax[searchSyntax.find('?') + 1:searchSyntax.find('=')]
     par2 = searchSyntax[searchSyntax.find('&') + 1:searchSyntax.rfind('='):]
     encodedurl = {par1: jobTtile, par2: location}
@@ -167,11 +176,12 @@ def runParser(searchSyntax,location,jobTtile,csvName,firstTime,secondTime):
         try:
             current_task.update_state(state=TaskState.RUNNING)
             soup = getSoap(url)
+            print(csvName)
             initParameter(csvName)
             fieldnames = ['JobTitle', 'JobLocation', 'Company']
             csvF = csv_file_name_generation(csvName)
             writer = csv.DictWriter(csvF, fieldnames=fieldnames)
-
+            print("intermediate step")
             parse_each_page(soup,writer)
             current_task.update_state(state=TaskState.RUNNING)
             if int(property['directPagination']) != 1:
@@ -188,11 +198,12 @@ def runParser(searchSyntax,location,jobTtile,csvName,firstTime,secondTime):
                     go_to_next_page(pagination[0]['href'],writer)
                 except:
                     pass
-
+            csvF.close()
             current_task.update_state(state=TaskState.SUCCESS)
             time.sleep(secondTime)
         except:
             current_task.update_state(state=TaskState.FAILURE)
+            time.sleep(secondTime)
 
 
 
