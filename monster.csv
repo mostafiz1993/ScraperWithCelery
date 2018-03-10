@@ -7,6 +7,11 @@ directEachjobUrl,1
 EachJobUrlIn,a
 identifierofEachJobUrl,class
 valueOfIdentifierofEachJobUrl,card-link
+directJobId,1
+jobIdIn,div
+jobIdAttr,id
+valueOfjJobIDAttr,JobDescription
+JobIdInAttr,data-job-id
 jobTitileIn,h1
 jobTitileAttr,class
 valueOfjJobTitileAttr,title
@@ -20,6 +25,10 @@ jobCompanyBranchAttr,a
 jobLocationIn,h2
 jobLocationAttr,class
 valueOfjJobLocationAttr,subtitle
+directJobDescription,1
+jobDescriptionIn,span
+jobDescriptionAttr,id
+valueOfjJobDescriptionAttr,TrackingJobBody
 prefixPaginationFlag,0
 directPagination,1
 paginationIn,a

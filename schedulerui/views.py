@@ -44,7 +44,7 @@ def addParserJob(request):
 
 def index(request):
     print(request.user)
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         #print("auth")
         if request.method == "POST":
             form = JobParserFrom(request.POST)
@@ -163,7 +163,7 @@ def killJobByJobId(jobId):
     except:
         return False
 
-@login_required(login_url='/home/index/')
+#@login_required(login_url='/home/index/')
 def addJobInScheduler(request):
     if request.method == "POST":
         form = JobSchedulerForm(request.POST)

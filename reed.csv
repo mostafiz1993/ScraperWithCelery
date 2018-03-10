@@ -7,6 +7,11 @@ directEachjobUrl,0
 EachJobUrlIn,a
 identifierofEachJobUrl,class
 valueOfIdentifierofEachJobUrl,gtmJobTitleClickResponsive
+directJobId,1
+jobIdIn,input
+jobIdAttr,id
+valueOfjJobIDAttr,JobId
+JobIdInAttr,value
 jobTitileIn,h1
 jobTitileAttr,itemprop
 valueOfjJobTitileAttr,title
@@ -20,6 +25,10 @@ jobCompanyBranchAttr,a
 jobLocationIn,span
 jobLocationAttr,itemprop
 valueOfjJobLocationAttr,addressLocality
+directJobDescription,1
+jobDescriptionIn,span
+jobDescriptionAttr,itemprop
+valueOfjJobDescriptionAttr,description
 prefixPaginationFlag,1
 directPagination,1
 paginationIn,a

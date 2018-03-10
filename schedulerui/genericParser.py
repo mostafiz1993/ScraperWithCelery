@@ -6,7 +6,7 @@ import datetime
 import time
 from celery import shared_task,current_task
 from .TaskState import *
-
+import re
 
 
 property = {}
@@ -16,6 +16,8 @@ jobTitileAttr = {}
 jobCompanyAttr = {}
 jobLocationAttr = {}
 paginationAttr = {}
+jobIdAttr = {}
+jobDescriptionAttr = {}
 csvFileName = ''
 
 def getSoap(url):
@@ -32,21 +34,19 @@ def csv_file_name_generation(csvFile):
 
 
 
-
-def generate_csv(jobTitle,jobLocation,jobCompany,writer):
+def generate_csv(jobId,eachJobUrl,jobTitle,jobLocation,jobCompany,jobDescription,writer):
     try:
-        import re
-
         jobTitle = re.sub('[^0-9a-zA-Z]+', ' ', jobTitle)
         jobLocation = re.sub('[^0-9a-zA-Z]+', ' ', jobLocation)
         jobCompany = re.sub('[^0-9a-zA-Z]+', ' ', jobCompany)
-        print(jobTitle + jobLocation + jobCompany)
-        writer.writerow({'JobTitle': jobTitle.strip(' '), 'JobLocation': jobLocation.strip(' '), 'Company': jobCompany.strip(' ')})
+        jobDescription = re.sub('[^0-9a-zA-Z]+', ' ', jobDescription)
+        #print(jobId + " " + jobLocation )
+        writer.writerow({'JobId' : jobId, 'JobUrl' : eachJobUrl, 'JobTitle': jobTitle, 'JobLocation': jobLocation,
+                         'Company': jobCompany, 'JobDescription': jobDescription})
         #csvF.write(jobTitle + ',' + jobLocation + ',' + jobCompany + '\n')
     except:
         print('error found')
         pass
-
 
 
 
@@ -59,10 +59,12 @@ def initParameter(csvFile):
             #print row
         identifierofEachJobAttr[property['identifierofEachJobAttr']] = property['valueOfIdentifierofEachJobAttr']
         identifierofEachJobUrl[property['identifierofEachJobUrl']] = property['valueOfIdentifierofEachJobUrl']
+        jobIdAttr[property['jobIdAttr']] = property['valueOfjJobIDAttr']
         jobTitileAttr[property['jobTitileAttr']] = property['valueOfjJobTitileAttr']
         jobCompanyAttr[property['jobCompanyAttr']] = property['valueOfJobCompanyAttr']
         jobLocationAttr[property['jobLocationAttr']] = property['valueOfjJobLocationAttr']
         paginationAttr[property['paginationAttr']] = property['valueOfPaginationAttr']
+        jobDescriptionAttr[property['jobDescriptionAttr']] = property['valueOfjJobDescriptionAttr']
 
 def parse_each_page(soup,writer):
     job = soup.find_all(property['eachJobIn'], attrs = identifierofEachJobAttr)
@@ -78,6 +80,18 @@ def parse_each_page(soup,writer):
             eachJobUrl = eachJobUrl[0]["href"]
 
         eachJobPage = getSoap(eachJobUrl)
+        if int(property['directJobId']) == 1:
+            jobIdIn = eachJobPage.find_all(property['jobIdIn'], attrs=jobIdAttr)
+            #print(jobIdIn)
+            # print jobIdIn
+            try:
+                jobId = jobIdIn[0][property['JobIdInAttr']]
+
+            except:
+                jobId = ''
+                pass
+        else:
+            jobId = 'no job id'
         if int(property['jobCompanyBranch']) == 1:
             companyt = eachJobPage.find_all(property['jobCompanyIn'], attrs = jobCompanyAttr)
             try:
@@ -112,6 +126,7 @@ def parse_each_page(soup,writer):
 
             #companyName = company[0].a.text
             #job = jobTitle[0].font.text
+
         jobL = eachJobPage.find_all(property['jobLocationIn'], attrs=jobLocationAttr)
         if property['jobLocationIn'] == 'input':
             try:
@@ -126,7 +141,20 @@ def parse_each_page(soup,writer):
                 jobLocation = ''
                 pass
 
-        generate_csv(jobTitle,jobLocation,company,writer)
+        if int(property['directJobDescription']) == 1:
+            jobdes = eachJobPage.find_all(property['jobDescriptionIn'], attrs=jobDescriptionAttr)
+            try:
+                jobDescription = ''
+                for des in jobdes:
+                    jobDescription = jobDescription + des.text
+            except:
+                jobDescription = ''
+                pass
+        else:
+            jobDescription = 'test'
+
+
+        generate_csv(jobId, eachJobUrl, jobTitle, jobLocation, company, jobDescription, writer)
 
 
 def go_to_next_page(url,writer):
@@ -178,9 +206,10 @@ def runParser(searchSyntax,location,jobTtile,csvName,firstTime,secondTime):
             soup = getSoap(url)
             print(csvName)
             initParameter(csvName)
-            fieldnames = ['JobTitle', 'JobLocation', 'Company']
+            fieldnames = ['JobId', 'JobUrl', 'JobTitle', 'JobLocation', 'Company', 'JobDescription']
             csvF = csv_file_name_generation(csvName)
             writer = csv.DictWriter(csvF, fieldnames=fieldnames)
+            writer.writeheader()
             print("intermediate step")
             parse_each_page(soup,writer)
             current_task.update_state(state=TaskState.RUNNING)

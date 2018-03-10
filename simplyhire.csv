@@ -7,6 +7,11 @@ directEachjobUrl,0
 EachJobUrlIn,a
 identifierofEachJobUrl,class
 valueOfIdentifierofEachJobUrl,card-link
+directJobId,1
+jobIdIn,div
+jobIdAttr,class
+valueOfjJobIDAttr,viewjob-paper
+JobIdInAttr,data-jobkey
 jobTitileIn,h1
 jobTitileAttr,itemprop
 valueOfjJobTitileAttr,title
@@ -20,6 +25,10 @@ jobCompanyBranchAttr,a
 jobLocationIn,span
 jobLocationAttr,class
 valueOfjJobLocationAttr,location
+directJobDescription,1
+jobDescriptionIn,div
+jobDescriptionAttr,class
+valueOfjJobDescriptionAttr,viewjob-description
 prefixPaginationFlag,1
 directPagination,1
 paginationIn,a
@@ -27,4 +36,4 @@ paginationAttr,class
 valueOfPaginationAttr,next-pagination
 jobPaginationBranchAttr,a
 jobPaginationBranchInedex,-1
-paginationText,Next
+paginationText,
